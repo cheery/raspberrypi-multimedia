@@ -1,0 +1,167 @@
+Now I wouldn't give this library too big chance of
+completion, but I published it anyway.
+
+It's supposed to become a multimedia library, providing api
+for audio, graphics, input, some kind of remote procedure call
+protocol.
+
+All right, now lets tell what I've implemented this far.
+
+Videosys module should be used for interfacing with the video system.
+
+videosys.fullscreen(display_id)
+
+    returns a native window handle, you can pass to the display.create_window -method.
+
+display = videosys.Display()
+    
+    creates and initializes a display object, which you can use to interface with EGL.
+
+context = display.create_context(version=2)
+    
+    creates OpenGL ES context
+
+context.make_current(draw, read=draw)
+    
+    makes the context current. After this operation all
+    opengl commands apply to the given draw and read surfaces.
+
+surface = display.create_window(handle)
+    
+    creates a window surface you can draw onto.
+
+surface = display.create_global_pixmap(width, height)
+
+    creates a global pixmap surface you can draw onto.
+    unlike window, you can share this surface between processes.
+
+surface.width, surface.height
+
+    retrieve width or height of the surface
+
+surface.handle
+
+    a string object handle. target of the surface.
+    if the surface can be shared you can transmit this
+    string to another process and read the surface.
+
+surface.swap_buffers()
+
+    swaps the buffers, read buffer to write buffer.
+
+globalimage = display.create_global_image(handle)
+
+    opens a surface handle.
+
+globalimage.width, globalimage.height
+
+    retrieve width or height of the image
+
+globalimage.target_texture(which)
+
+    if an opengl texture is bound, sets the image to source
+    itself from the global image. after this the global image
+    can be freed if desired.
+
+    which: oes.TEXTURE_2D
+
+globalimage.free()
+
+    frees the global image, the handle becomes a dud.
+
+Oes module interfaces with opengl es ver.2
+
+self explanatory commands next, they behave same as the ones in opengl:
+
+oes.clear(which)
+    which: oes.DEPTH_BUFFER_BIT | oes.COLOR_BUFFER_BIT | oes.STENCIL_BUFFER_BIT
+
+oes.clearColor(r,g,b,a)
+oes.clearDepth(depth)
+oes.clearStencil(value)
+
+oes.enable(cap)
+oes.disable(cap)
+    which: oes.TEXTURE_2D, oes.CULL_FACE, oes.BLEND,
+        oes.DITHER, oes.STENCIL_TEST, oes.DEPTH_TEST,
+        oes.SCISSOR_TEST, oes.POLYGON_OFFSET_FILL,
+        oes.SAMPLE_ALPHA_TO_COVERAGE, oes.SAMPLE_COVERAGE
+
+for most other things there's a need to clean up their behavior a bit.
+unfortunately I don't provide cleaned-up raw commands, but the abstractions
+implemented have been refined and implemented by multiple authors.
+My implementation is bit clumsy, it's not complete.
+
+shader = oes.Shader((frag, vert))
+
+    compiles and links the shader, from frag and vert source listings.
+    if the shaders are errorneous, an exception will be raised.
+
+shader.use()
+
+    use this shader
+
+shader.i(name, value)
+shader.f(name, value)
+shader.val2(name, a, b)
+shader.val3(name, a, b, c)
+shader.mat3(name, matrix3x3)
+shader.mat4(name, matrix4x4)
+
+    pass uniforms of different kinds to the shader.
+
+vbo = oes.Drawable(mode, attribs={name: (size, start, stride)})
+
+    produces a vbo. attribs describe the format of the data you pass into it.
+    
+    mode: oes.POINTS, oes.LINES, oes.LINE_LOOP, oes.LINE_STRIP,
+        oes.TRIANGLES, oes.TRIANGLE_STRIP, oes.TRIANGLE_FAN  
+
+vbo.upload(data)
+    
+    upload data to vbo. data must be a string.
+
+vbo.uploadList(lst)
+
+    upload a list to vbo.
+
+vbo.draw(shader, first, count)
+
+    draws the vbo
+
+oes.getError()
+    returns an error string, if error occured, otherwise None
+
+tex2d = Texture2D()
+
+    creates a texture object
+
+tex2d.bind(unit=0)
+
+    binds the texture
+
+tex2d.upload(width, height, data)
+
+    uploads the data to the texture, it must be bound during this.
+
+tex2d.setSize(width, height)
+
+    changes the size of the texture
+
+tex2d.mipmap()
+tex2d.mipmapNearest()
+
+    generates the mipmap and sets the sampling method, texture must be bound during this.
+
+tex2d.linear()
+tex2d.nearest()
+tex2d.clampToEdge()
+tex2d.repeat()
+
+    sets how the texture is being sampled, texture must be bound during this.
+
+There's no release commands for most of these objects, yet they do not free
+their handles automaticly. You have to implement the methods and explicitly
+free the handles produced by these objects, if you need to free them in your app.
+
+That's it.. I hope it's somewhat enough for something!
