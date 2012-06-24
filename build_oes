@@ -1,0 +1,6 @@
+#!/bin/sh
+CC="gcc"
+CFLAGS="-I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads/ -shared -pthread -fPIC -fwrapv -O2 -Wall -fno-strict-aliasing -I/usr/include/python2.7 -L/opt/vc/lib/ -lGLESv2 -lEGL -lopenmaxil -lbcm_host -lvcos -lvchiq_arm"
+
+cython src/oes.pyx
+$CC $CFLAGS -o oes.so src/oes.c
