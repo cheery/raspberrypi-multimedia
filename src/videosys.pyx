@@ -1,3 +1,6 @@
+/* Copyright (c) 2012 Cheery
+ *
+ * See the file license.txt for copying permission. */
 cdef encode_handle(char* handle, int count):
     out = ""
     for i in range(count):

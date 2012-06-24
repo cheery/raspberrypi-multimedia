@@ -1,3 +1,6 @@
+/* Copyright (c) 2012 Cheery
+ *
+ * See the file license.txt for copying permission. */
 from array import array
 
 DEPTH_BUFFER_BIT = GL_DEPTH_BUFFER_BIT
