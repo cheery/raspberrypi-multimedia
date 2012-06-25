@@ -1,6 +1,6 @@
-/* Copyright (c) 2012 Cheery
- *
- * See the file license.txt for copying permission. */
+# Copyright (c) 2012 Cheery
+#
+# See the file license.txt for copying permission.
 import sys, videosys, oes, time
 from array import array
 from PIL import Image

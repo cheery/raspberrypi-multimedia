@@ -1,3 +1,6 @@
+# Copyright (c) 2012 Cheery
+#
+# See the file license.txt for copying permission.
 import pyudev, struct, time, select
 
 def validate(dev):

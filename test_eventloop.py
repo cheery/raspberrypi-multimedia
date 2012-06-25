@@ -1,3 +1,6 @@
+# Copyright (c) 2012 Cheery
+#
+# See the file license.txt for copying permission.
 from eventloop import EventLoop, InputManager
 
 devices = InputManager()
